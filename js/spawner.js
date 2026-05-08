@@ -1,14 +1,15 @@
-let spawnTimer = 0;
+import { createBubble } from "./entities.js";
 
-function updateSpawner(){
+/* =========================
+   SPAWN LOOP
+========================= */
 
-    spawnTimer -= gameState.delta;
+export function startSpawner(){
 
-    if(spawnTimer <= 0){
+    setInterval(()=>{
 
-        spawnEnemy();
+        createBubble();
 
-        spawnTimer =
-        60 - gameState.level*2;
-    }
+    }, 700);
+
 }
