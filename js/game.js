@@ -1,44 +1,87 @@
-const canvas =
-document.getElementById('gameCanvas');
+import { GAME } from "./state.js";
+import {
+    player,
+    updatePlayer,
+    drawPlayer
+} from "./player.js";
 
-const ctx =
-canvas.getContext('2d');
+/* =========================
+   CANVAS
+========================= */
 
-let width,height;
+const canvas = document.getElementById("gameCanvas");
 
-function resize(){
+const ctx = canvas.getContext("2d");
 
-    width =
-    canvas.width =
-    window.innerWidth;
+canvas.width = GAME.width;
+canvas.height = GAME.height;
 
-    height =
-    canvas.height =
-    window.innerHeight;
+/* =========================
+   INPUT
+========================= */
+
+window.addEventListener("mousemove", (e)=>{
+
+    GAME.mouseX = e.clientX;
+    GAME.mouseY = e.clientY;
+
+});
+
+/* =========================
+   RESIZE
+========================= */
+
+window.addEventListener("resize", ()=>{
+
+    GAME.width = window.innerWidth;
+    GAME.height = window.innerHeight;
+
+    canvas.width = GAME.width;
+    canvas.height = GAME.height;
+
+});
+
+/* =========================
+   UPDATE
+========================= */
+
+function update(){
+
+    updatePlayer();
+
 }
 
-window.addEventListener(
-    'resize',
-    resize
-);
+/* =========================
+   DRAW
+========================= */
 
-resize();
+function draw(){
 
-function gameLoop(timestamp){
+    ctx.clearRect(
+        0,
+        0,
+        GAME.width,
+        GAME.height
+    );
 
-    gameState.delta =
-    (timestamp - gameState.lastTime)/16.67;
+    drawPlayer(ctx);
 
-    gameState.lastTime = timestamp;
+}
+
+/* =========================
+   LOOP
+========================= */
+
+function gameLoop(){
+
+    if(!GAME.running) return;
 
     update();
 
-    render();
+    draw();
 
     requestAnimationFrame(gameLoop);
+
 }
 
-requestAnimationFrame(gameLoop);
-}
-
-loop();
+gameLoop();
