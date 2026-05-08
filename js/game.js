@@ -4,7 +4,14 @@ import {
     updatePlayer,
     drawPlayer
 } from "./player.js";
+import {
+    updateEntities,
+    drawEntities
+} from "./entities.js";
 
+import {
+    startSpawner
+} from "./spawner.js";
 /* =========================
    CANVAS
 ========================= */
