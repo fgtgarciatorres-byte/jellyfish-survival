@@ -3,8 +3,11 @@ import {
     checkCollisions
 } from "./collisions.js";
 import {
-    updatePlayer,
-    drawPlayer
+    updateEntities,
+drawEntities,
+updateBullets,
+drawBullets,
+createBullet
 } from "./player.js";
 
 import {
@@ -66,6 +69,37 @@ function update(){
 
     updateEntities();
 
+    updateBullets();
+    
+    if(GAME.energy >= GAME.maxEnergy){
+
+    GAME.shooting = true;
+        
+
+}
+    if(GAME.shooting){
+
+    createBullet(
+        GAME.mouseX,
+        GAME.mouseY - 40
+    );
+
+}
+    if(GAME.shooting){
+
+    GAME.energy -= 2;
+
+    if(GAME.energy <= 0){
+
+        GAME.energy = 0;
+
+        GAME.shooting = false;
+
+    }
+
+}
+    
+
     checkCollisions();
 
     updateUI();
@@ -86,10 +120,11 @@ function draw(){
 
     drawEntities(ctx);
 
+    drawBullets(ctx);
+
     drawPlayer(ctx);
 
 }
-
 /* =========================
    LOOP
 ========================= */
