@@ -24,32 +24,21 @@ window.addEventListener(
 
 resize();
 
-function loop(){
+function gameLoop(timestamp){
 
-    ctx.fillStyle='#001018';
+    gameState.delta =
+    (timestamp - gameState.lastTime)/16.67;
 
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
+    gameState.lastTime = timestamp;
 
-    ctx.fillStyle='cyan';
+    update();
 
-    ctx.beginPath();
+    render();
 
-    ctx.arc(
-        width/2,
-        height/2,
-        40,
-        0,
-        Math.PI*2
-    );
+    requestAnimationFrame(gameLoop);
+}
 
-    ctx.fill();
-
-    requestAnimationFrame(loop);
+requestAnimationFrame(gameLoop);
 }
 
 loop();
