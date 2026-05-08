@@ -1,15 +1,48 @@
-function checkCollision(a,b){
+import { GAME } from "./state.js";
 
-    let dx = a.x - b.x;
-    let dy = a.y - b.y;
+import { player } from "./player.js";
 
-    let maxDist = a.size + b.size;
+import { entities } from "./entities.js";
 
-    if(Math.abs(dx) > maxDist) return false;
-    if(Math.abs(dy) > maxDist) return false;
+/* =========================
+   COLISIONES
+========================= */
 
-    return (
-        dx*dx + dy*dy <
-        maxDist*maxDist
-    );
+export function checkCollisions(){
+
+    for(let i = entities.length - 1; i >= 0; i--){
+
+        const entity = entities[i];
+
+        const dx = player.x - entity.x;
+        const dy = player.y - entity.y;
+
+        const distance = Math.sqrt(
+            dx * dx + dy * dy
+        );
+
+        if(
+            distance <
+            player.radius + entity.radius
+        ){
+
+            // eliminar burbuja
+            entities.splice(i,1);
+
+            // perder vida
+            GAME.lives--;
+
+            // game over
+            if(GAME.lives <= 0){
+
+                GAME.running = false;
+
+                alert("GAME OVER");
+
+            }
+
+        }
+
+    }
+
 }
