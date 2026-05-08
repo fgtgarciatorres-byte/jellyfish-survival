@@ -21,51 +21,51 @@ export function checkCollisions(){
             dx * dx + dy * dy
         );
 
-        if(
-            distance <
-            player.radius + entity.radius
-        ){
+       if(
+    distance <
+    player.radius + entity.radius + 20
+){
 
-            // eliminar entidad
-entities.splice(i,1);
+    // eliminar entidad
+    entities.splice(i,1);
 
-/* =========================
-   EFECTOS SEGÚN TIPO
-========================= */
+    /* =========================
+       EFECTOS SEGÚN TIPO
+    ========================= */
 
-if(entity.type === "bubble"){
+    if(entity.type === "bubble"){
 
-    GAME.lives--;
-
-}
-
-if(entity.type === "star"){
-
-    GAME.score += 10;
-
-}
-
-if(entity.type === "alga"){
-
-    GAME.energy += 20;
-
-    if(GAME.energy > GAME.maxEnergy){
-
-        GAME.energy = GAME.maxEnergy;
+        GAME.lives--;
 
     }
 
-}
-            // game over
-            if(GAME.lives <= 0){
+    if(entity.type === "star"){
 
-                GAME.running = false;
+        GAME.score += 10;
 
-                alert("GAME OVER");
+    }
 
-            }
+    if(entity.type === "alga"){
+
+        GAME.energy += 20;
+
+        if(GAME.energy > GAME.maxEnergy){
+
+            GAME.energy = GAME.maxEnergy;
 
         }
+
+    }
+
+    /* =========================
+       GAME OVER
+    ========================= */
+
+    if(GAME.lives <= 0){
+
+        GAME.running = false;
+
+        alert("GAME OVER");
 
     }
 
