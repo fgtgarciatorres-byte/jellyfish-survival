@@ -1,9 +1,10 @@
 import { GAME } from "./state.js";
+
 import {
-    player,
     updatePlayer,
     drawPlayer
 } from "./player.js";
+
 import {
     updateEntities,
     drawEntities
@@ -12,6 +13,11 @@ import {
 import {
     startSpawner
 } from "./spawner.js";
+
+import {
+    updateUI
+} from "./ui.js";
+
 /* =========================
    CANVAS
 ========================= */
@@ -27,7 +33,7 @@ canvas.height = GAME.height;
    INPUT
 ========================= */
 
-window.addEventListener("mousemove", (e)=>{
+window.addEventListener("mousemove", (e) => {
 
     GAME.mouseX = e.clientX;
     GAME.mouseY = e.clientY;
@@ -38,7 +44,7 @@ window.addEventListener("mousemove", (e)=>{
    RESIZE
 ========================= */
 
-window.addEventListener("resize", ()=>{
+window.addEventListener("resize", () => {
 
     GAME.width = window.innerWidth;
     GAME.height = window.innerHeight;
@@ -62,10 +68,6 @@ function update(){
 
 }
 
-    updatePlayer();
-
-}
-
 /* =========================
    DRAW
 ========================= */
@@ -85,24 +87,11 @@ function draw(){
 
 }
 
-    ctx.clearRect(
-        0,
-        0,
-        GAME.width,
-        GAME.height
-    );
-
-    drawPlayer(ctx);
-
-}
-
 /* =========================
    LOOP
 ========================= */
 
-function startSpawner();
-gameLoop();
-{
+function gameLoop(){
 
     if(!GAME.running) return;
 
@@ -113,5 +102,11 @@ gameLoop();
     requestAnimationFrame(gameLoop);
 
 }
+
+/* =========================
+   START
+========================= */
+
+startSpawner();
 
 gameLoop();
