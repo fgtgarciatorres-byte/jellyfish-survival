@@ -26,12 +26,36 @@ export function checkCollisions(){
             player.radius + entity.radius
         ){
 
-            // eliminar burbuja
-            entities.splice(i,1);
+            // eliminar entidad
+entities.splice(i,1);
 
-            // perder vida
-            GAME.lives--;
+/* =========================
+   EFECTOS SEGÚN TIPO
+========================= */
 
+if(entity.type === "bubble"){
+
+    GAME.lives--;
+
+}
+
+if(entity.type === "star"){
+
+    GAME.score += 10;
+
+}
+
+if(entity.type === "alga"){
+
+    GAME.energy += 20;
+
+    if(GAME.energy > GAME.maxEnergy){
+
+        GAME.energy = GAME.maxEnergy;
+
+    }
+
+}
             // game over
             if(GAME.lives <= 0){
 
