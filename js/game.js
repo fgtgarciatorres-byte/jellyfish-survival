@@ -79,6 +79,19 @@ function draw(){
         GAME.height
     );
 
+    drawEntities(ctx);
+
+    drawPlayer(ctx);
+
+}
+
+    ctx.clearRect(
+        0,
+        0,
+        GAME.width,
+        GAME.height
+    );
+
     drawPlayer(ctx);
 
 }
@@ -87,7 +100,9 @@ function draw(){
    LOOP
 ========================= */
 
-function gameLoop(){
+function startSpawner();
+gameLoop();
+{
 
     if(!GAME.running) return;
 
