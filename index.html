@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-    <audio id="bgMusic" loop>
-    <source src="assets/audio/Button_Bop_Logic.mp3" type="audio/mpeg">
-</audio>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +9,17 @@
 </head>
 <body>
 
+    <!-- HUD -->
+    <div id="ui">
+        <div>Puntos: <span id="score">0</span></div>
+        <div>Nivel: <span id="level">1</span></div>
+    </div>
+
+    <!-- Canvas -->
     <canvas id="gameCanvas"></canvas>
 
-   <script src="js/player.js"></script>
-<script src="js/bosses.js"></script>
-<script src="js/spawner.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/game.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="./js/game.js"></script>
 
 </body>
 </html>
