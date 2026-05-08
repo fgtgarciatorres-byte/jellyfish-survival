@@ -1,7 +1,9 @@
 import { GAME } from "./state.js";
+
 import {
     checkCollisions
 } from "./collisions.js";
+
 import {
     updatePlayer,
     drawPlayer
