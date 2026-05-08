@@ -11,4 +11,7 @@ export function updateUI(){
 
     levelElement.textContent = GAME.level;
 
+    livesElement.textContent = GAME.lives;
+
+
 }
