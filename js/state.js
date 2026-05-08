@@ -1,7 +1,12 @@
-const GAME_MODES = {
+export const GAME = {
+    width: window.innerWidth,
+    height: window.innerHeight,
 
-    REEF:'reef',
-    TURTLE_BOSS:'turtleBoss',
-    SARGASSO:'sargasso',
-    SHARK_BOSS:'sharkBoss'
+    running: true,
+
+    score: 0,
+    level: 1,
+
+    mouseX: window.innerWidth / 2,
+    mouseY: window.innerHeight / 2
 };
