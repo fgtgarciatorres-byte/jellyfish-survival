@@ -56,6 +56,14 @@ function update(){
 
     updatePlayer();
 
+    updateEntities();
+
+    updateUI();
+
+}
+
+    updatePlayer();
+
 }
 
 /* =========================
