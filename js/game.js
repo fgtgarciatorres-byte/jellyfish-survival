@@ -3,16 +3,16 @@ import {
     checkCollisions
 } from "./collisions.js";
 import {
-    updateEntities,
-drawEntities,
-updateBullets,
-drawBullets,
-createBullet
+    updatePlayer,
+    drawPlayer
 } from "./player.js";
 
 import {
     updateEntities,
-    drawEntities
+    drawEntities,
+    updateBullets,
+    drawBullets,
+    createBullet
 } from "./entities.js";
 
 import {
