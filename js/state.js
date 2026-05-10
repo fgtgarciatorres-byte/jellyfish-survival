@@ -49,6 +49,23 @@ export const GAME = {
 
     shield: false,
     shieldTimer: 0,
+    /* =========================
+   BOSS SYSTEM
+========================= */
+
+bossMode: false,
+
+bossLives: 0,
+
+bossMaxLives: 0,
+
+bossX: 0,
+
+bossY: 120,
+
+bossDirection: 1,
+
+bossShootTimer: 0,
 
     /* =========================
        INPUT
