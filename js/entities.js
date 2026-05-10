@@ -17,6 +17,7 @@ import {
 ========================= */
 
 export const entities = [];
+export const bullets = [];
 
 export const bullets = [];
 
@@ -416,7 +417,104 @@ export function updateBullets(){
     }
 
 }
+/* =========================
+   CREATE BULLET
+========================= */
 
+export function createBullet(x, y, angle = -Math.PI / 2){
+
+    bullets.push({
+
+        x,
+        y,
+
+        angle,
+
+        speed: 12,
+
+        radius: 6,
+
+        damage: GAME.bulletDamage,
+
+        life: 90
+
+    });
+
+}
+/* =========================
+   UPDATE BULLETS
+========================= */
+
+export function updateBullets(){
+
+    for(let i = bullets.length - 1; i >= 0; i--){
+
+        const bullet = bullets[i];
+
+        bullet.x += Math.cos(bullet.angle) * bullet.speed;
+
+        bullet.y += Math.sin(bullet.angle) * bullet.speed;
+
+        bullet.life--;
+
+        if(
+
+            bullet.life <= 0 ||
+
+            bullet.y < -50 ||
+
+            bullet.x < -50 ||
+
+            bullet.x > GAME.width + 50 ||
+
+            bullet.y > GAME.height + 50
+
+        ){
+
+            bullets.splice(i,1);
+
+        }
+
+    }
+
+}
+/* =========================
+   DRAW BULLETS
+========================= */
+
+export function drawBullets(ctx){
+
+    for(const bullet of bullets){
+
+        ctx.save();
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            bullet.x,
+            bullet.y,
+
+            bullet.radius,
+
+            0,
+            Math.PI * 2
+
+        );
+
+        ctx.fillStyle = "#90e0ef";
+
+        ctx.shadowColor = "#90e0ef";
+
+        ctx.shadowBlur = 20;
+
+        ctx.fill();
+
+        ctx.restore();
+
+    }
+
+}
 /* =========================
    DRAW ENTITIES
 ========================= */
