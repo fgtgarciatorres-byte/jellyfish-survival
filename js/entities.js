@@ -5,6 +5,12 @@ import {
     createExplosion
 
 } from "./particles.js";
+import {
+
+    triggerShake,
+    triggerFlash
+
+} from "./effects.js";
 
 /* =========================
    ARRAYS
@@ -261,6 +267,16 @@ export function updateEntities(){
     "#ff2222"
 
 ); 
+                    /* =========================
+   MINE IMPACT
+========================= */
+
+triggerShake(30);
+
+triggerFlash(
+    "#ff4444",
+    0.4
+);
                    entity.dead = true;
 
                 }
