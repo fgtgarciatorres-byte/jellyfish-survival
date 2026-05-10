@@ -32,6 +32,13 @@ import {
     drawBoss
 } from "./bosses.js";
 
+import {
+
+    updateParticles,
+    drawParticles
+
+} from "./particles.js";
+
 /* =========================
    CANVAS
 ========================= */
@@ -119,7 +126,12 @@ function update(){
     updateEntities();
 
     updateBullets();
+    
+    /* =========================
+   PARTICLES
+========================= */
 
+updateParticles();
     /* =========================
        LEVEL SYSTEM
     ========================= */
@@ -308,6 +320,12 @@ console.log("DRAW");
     drawEntities(ctx);
 
     drawBullets(ctx);
+    
+    /* =========================
+   PARTICLES
+========================= */
+
+drawParticles(ctx);
 
     /* =========================
        BOSS
