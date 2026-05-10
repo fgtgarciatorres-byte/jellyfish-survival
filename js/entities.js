@@ -9,7 +9,7 @@ export const entities = [];
 export const bullets = [];
 
 /* =========================
-   RANDOM ENTITY TYPE
+   RANDOM TYPE
 ========================= */
 
 function randomType(){
@@ -44,20 +44,22 @@ function randomType(){
 
     }
 
-    // 5%
-   if(random < 0.98){
+    // 3%
+    if(random < 0.98){
 
-    return "crab";
+        return "crab";
 
-}
+    }
 
-if(random < 0.99){
+    // 1%
+    if(random < 0.99){
 
-    return "shark";
+        return "shark";
 
-}
+    }
 
-return "mine";
+    // 1%
+    return "mine";
 
 }
 
@@ -69,80 +71,85 @@ export function createBubble(){
 
     const type = randomType();
 
-    let entity = {
+    const entity = {
 
         type,
 
         x: Math.random() * GAME.width,
 
-        y: -50,
+        y: -100,
 
         radius: 25,
 
         speed: 2 + Math.random() * 3,
 
         vx: 0,
-        vy: 0
+        vy: 0,
+
+        exploding: false,
+
+        explosionRadius: 0,
+
+        dead: false
 
     };
 
     /* =========================
-       CRAB SPECIAL
+       CRAB
     ========================= */
 
     if(type === "crab"){
 
-        entity.y = GAME.height - 100;
+        entity.y = GAME.height - 120;
 
         entity.x = -100;
 
         entity.vx = 4;
 
         entity.radius = 35;
+
+    }
+
+    /* =========================
+       SHARK
+    ========================= */
+
+    if(type === "shark"){
+
+        entity.y =
+            100 +
+            Math.random()
+            * (GAME.height - 200);
+
+        entity.radius = 50;
+
+        entity.speed = 0;
+
+        entity.vx =
+            Math.random() < 0.5
+            ? 4
+            : -4;
+
+        entity.x =
+            entity.vx > 0
+            ? -200
+            : GAME.width + 200;
+
+    }
+
+    /* =========================
+       MINE
+    ========================= */
+
+    if(type === "mine"){
+
+        entity.radius = 35;
+
+        entity.speed = 1.5;
+
     }
 
     entities.push(entity);
-
-}
-/* =========================
-   SHARK SPECIAL
-========================= */
-
-if(type === "shark"){
-
-    entity.y =
-        100 +
-        Math.random()
-        * (GAME.height - 200);
-
-    entity.radius = 50;
-
-    entity.speed = 0;
-
-    entity.vx =
-        Math.random() < 0.5
-        ? 4
-        : -4;
-
-    entity.x =
-        entity.vx > 0
-        ? -200
-        : GAME.width + 200;
-
-}
-/* =========================
-   MINE SPECIAL
-========================= */
-
-if(type === "mine"){
-
-    entity.radius = 35;
-
-    entity.speed = 1.5;
-
-    entity.exploding = false;
-
-    entity.explosionRadius = 0;
 
 }
 
@@ -172,44 +179,89 @@ export function createBullet(x, y){
 export function updateEntities(){
 
     for(let entity of entities){
-       /* =========================
-   SHARK AI
-========================= */
 
-if(entity.type === "shark"){
+        /* =========================
+           SHARK AI
+        ========================= */
 
-    const dx =
-        GAME.mouseX - entity.x;
+        if(entity.type === "shark"){
 
-    const dy =
-        GAME.mouseY - entity.y;
+            const dx =
+                GAME.mouseX - entity.x;
 
-    const angle =
-        Math.atan2(dy, dx);
+            const dy =
+                GAME.mouseY - entity.y;
 
-    entity.vx =
-        Math.cos(angle) * 4;
+            const angle =
+                Math.atan2(dy, dx);
 
-    entity.vy =
-        Math.sin(angle) * 4;
+            entity.vx =
+                Math.cos(angle) * 4;
 
-}
+            entity.vy =
+                Math.sin(angle) * 4;
+
+        }
+
+        /* =========================
+           MINE AI
+        ========================= */
+
+        if(entity.type === "mine"){
+
+            const dx =
+                GAME.mouseX - entity.x;
+
+            const dy =
+                GAME.mouseY - entity.y;
+
+            const distance = Math.sqrt(
+                dx * dx + dy * dy
+            );
+
+            // activar explosión
+            if(
+                distance < 140 &&
+                !entity.exploding
+            ){
+
+                entity.exploding = true;
+
+            }
+
+            // expansión explosión
+            if(entity.exploding){
+
+                entity.explosionRadius += 8;
+
+                // daño explosión
+                if(
+                    entity.explosionRadius < 120 &&
+                    distance < entity.explosionRadius
+                ){
+
+                    GAME.lives -= 0.03;
+
+                }
+
+                // destruir mina
+                if(entity.explosionRadius > 140){
+
+                    entity.dead = true;
+
+                }
+
+            }
+
+        }
 
         /* =========================
            VECTORIAL MOVEMENT
         ========================= */
 
-        if(entity.vx !== undefined){
+        entity.x += entity.vx;
 
-            entity.x += entity.vx;
-
-        }
-
-        if(entity.vy !== undefined){
-
-            entity.y += entity.vy;
-
-        }
+        entity.y += entity.vy;
 
         /* =========================
            NORMAL FALL
@@ -217,20 +269,11 @@ if(entity.type === "shark"){
 
         if(
             !entity.bossProjectile &&
-            entity.type !== "crab"
+            entity.type !== "crab" &&
+            entity.type !== "shark"
         ){
 
             entity.y += entity.speed;
-
-        }
-
-        /* =========================
-           CRAB
-        ========================= */
-
-        if(entity.type === "crab"){
-
-            entity.x += entity.vx;
 
         }
 
@@ -245,12 +288,25 @@ if(entity.type === "shark"){
         const entity = entities[i];
 
         /* =========================
+           DEAD
+        ========================= */
+
+        if(entity.dead){
+
+            entities.splice(i,1);
+
+            continue;
+
+        }
+
+        /* =========================
            NORMAL ENTITIES
         ========================= */
 
         if(
             entity.type !== "crab" &&
-            entity.y > GAME.height + 120
+            entity.type !== "shark" &&
+            entity.y > GAME.height + 150
         ){
 
             if(entity.type === "bubble"){
@@ -264,12 +320,21 @@ if(entity.type === "shark"){
         }
 
         /* =========================
-           CRABS
+           CRABS / SHARKS
         ========================= */
 
         if(
-            entity.type === "crab" &&
-            entity.x > GAME.width + 120
+            (
+                entity.type === "crab"
+                ||
+                entity.type === "shark"
+            )
+            &&
+            (
+                entity.x < -300
+                ||
+                entity.x > GAME.width + 300
+            )
         ){
 
             entities.splice(i,1);
@@ -283,25 +348,16 @@ if(entity.type === "shark"){
         if(
             entity.bossProjectile &&
             (
-                entity.x < -200 ||
-                entity.x > GAME.width + 200 ||
-                entity.y < -200 ||
-                entity.y > GAME.height + 200
+                entity.x < -300 ||
+                entity.x > GAME.width + 300 ||
+                entity.y < -300 ||
+                entity.y > GAME.height + 300
             )
         ){
 
             entities.splice(i,1);
 
         }
-       /* =========================
-   DEAD ENTITIES
-========================= */
-
-if(entity.dead){
-
-    entities.splice(i,1);
-
-}
 
     }
 
@@ -372,17 +428,19 @@ export function drawEntities(ctx){
         if(entity.type === "crab"){
 
             drawCrab(ctx, entity);
-            }
-if(entity.type === "shark"){
 
-    drawShark(ctx, entity);
+        }
 
-}
-       if(entity.type === "mine"){
+        if(entity.type === "shark"){
 
-    drawMine(ctx, entity);
+            drawShark(ctx, entity);
 
-}
+        }
+
+        if(entity.type === "mine"){
+
+            drawMine(ctx, entity);
+
         }
 
     }
@@ -408,14 +466,11 @@ export function drawBullets(ctx){
         ctx.beginPath();
 
         ctx.arc(
-
             bullet.x,
             bullet.y,
             bullet.radius,
-
             0,
             Math.PI * 2
-
         );
 
         ctx.fill();
@@ -433,10 +488,6 @@ export function drawBullets(ctx){
 function drawBubble(ctx, bubble){
 
     ctx.save();
-
-    /* =========================
-       BOSS PROJECTILE
-    ========================= */
 
     if(bubble.bossProjectile){
 
@@ -460,15 +511,11 @@ function drawBubble(ctx, bubble){
     ctx.beginPath();
 
     ctx.arc(
-
         bubble.x,
         bubble.y,
-
         bubble.radius,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.fill();
@@ -500,15 +547,11 @@ function drawStar(ctx, star){
     ctx.beginPath();
 
     ctx.arc(
-
         star.x,
         star.y,
-
         star.radius * 0.6,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.fill();
@@ -541,15 +584,10 @@ function drawAlga(ctx, alga){
     );
 
     ctx.quadraticCurveTo(
-
         alga.x + 20,
-
         alga.y + 30,
-
         alga.x,
-
         alga.y + 60
-
     );
 
     ctx.stroke();
@@ -621,15 +659,11 @@ function drawShield(ctx, shield){
     ctx.beginPath();
 
     ctx.arc(
-
         shield.x,
         shield.y,
-
         shield.radius,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.stroke();
@@ -655,15 +689,11 @@ function drawCrab(ctx, crab){
     ctx.beginPath();
 
     ctx.arc(
-
         crab.x,
         crab.y,
-
         crab.radius,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.fill();
@@ -671,6 +701,7 @@ function drawCrab(ctx, crab){
     ctx.restore();
 
 }
+
 /* =========================
    SHARK
 ========================= */
@@ -692,38 +723,29 @@ function drawShark(ctx, shark){
 
     ctx.rotate(angle);
 
-    /* =========================
-       BODY
-    ========================= */
-
     ctx.fillStyle = "#6c757d";
 
     ctx.shadowBlur = 20;
 
     ctx.shadowColor = "#adb5bd";
 
+    /* BODY */
+
     ctx.beginPath();
 
     ctx.ellipse(
-
         0,
         0,
-
         70,
         35,
-
         0,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.fill();
 
-    /* =========================
-       TAIL
-    ========================= */
+    /* TAIL */
 
     ctx.beginPath();
 
@@ -737,9 +759,7 @@ function drawShark(ctx, shark){
 
     ctx.fill();
 
-    /* =========================
-       FIN
-    ========================= */
+    /* FIN */
 
     ctx.beginPath();
 
@@ -753,9 +773,7 @@ function drawShark(ctx, shark){
 
     ctx.fill();
 
-    /* =========================
-       EYE
-    ========================= */
+    /* EYE */
 
     ctx.fillStyle = "white";
 
@@ -788,6 +806,7 @@ function drawShark(ctx, shark){
     ctx.restore();
 
 }
+
 /* =========================
    MINE
 ========================= */
@@ -796,9 +815,7 @@ function drawMine(ctx, mine){
 
     ctx.save();
 
-    /* =========================
-       EXPLOSION
-    ========================= */
+    /* EXPLOSION */
 
     if(mine.exploding){
 
@@ -814,24 +831,18 @@ function drawMine(ctx, mine){
         ctx.beginPath();
 
         ctx.arc(
-
             mine.x,
             mine.y,
-
             mine.explosionRadius,
-
             0,
             Math.PI * 2
-
         );
 
         ctx.stroke();
 
     }
 
-    /* =========================
-       BODY
-    ========================= */
+    /* BODY */
 
     ctx.fillStyle = "#444";
 
@@ -842,22 +853,16 @@ function drawMine(ctx, mine){
     ctx.beginPath();
 
     ctx.arc(
-
         mine.x,
         mine.y,
-
         mine.radius,
-
         0,
         Math.PI * 2
-
     );
 
     ctx.fill();
 
-    /* =========================
-       SPIKES
-    ========================= */
+    /* SPIKES */
 
     ctx.strokeStyle = "#999";
 
@@ -895,56 +900,5 @@ function drawMine(ctx, mine){
     }
 
     ctx.restore();
-
-}
-/* =========================
-   MINE AI
-========================= */
-
-if(entity.type === "mine"){
-
-    const dx =
-        GAME.mouseX - entity.x;
-
-    const dy =
-        GAME.mouseY - entity.y;
-
-    const distance = Math.sqrt(
-        dx * dx + dy * dy
-    );
-
-    // activar explosión
-    if(
-        distance < 140 &&
-        !entity.exploding
-    ){
-
-        entity.exploding = true;
-
-    }
-
-    // crecer explosión
-    if(entity.exploding){
-
-        entity.explosionRadius += 8;
-
-        // daño explosión
-        if(
-            entity.explosionRadius < 120 &&
-            distance < entity.explosionRadius
-        ){
-
-            GAME.lives -= 0.03;
-
-        }
-
-        // eliminar mina
-        if(entity.explosionRadius > 140){
-
-            entity.dead = true;
-
-        }
-
-    }
 
 }
