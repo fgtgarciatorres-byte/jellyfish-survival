@@ -1,7 +1,7 @@
 import { GAME } from "./state.js";
 
 /* =========================
-   ENTITIES
+   ARRAYS
 ========================= */
 
 export const entities = [];
@@ -9,53 +9,89 @@ export const entities = [];
 export const bullets = [];
 
 /* =========================
-   CREAR TIPO ALEATORIO
+   RANDOM ENTITY TYPE
 ========================= */
 
 function randomType(){
 
     const random = Math.random();
 
-    if(random < 0.7){
+    // 55%
+    if(random < 0.55){
 
         return "bubble";
 
     }
 
-    if(random < 0.85){
+    // 15%
+    if(random < 0.70){
 
         return "star";
 
     }
 
-    return "alga";
+    // 15%
+    if(random < 0.85){
+
+        return "alga";
+
+    }
+
+    // 10%
+    if(random < 0.95){
+
+        return "shield";
+
+    }
+
+    // 5%
+    return "crab";
 
 }
 
 /* =========================
-   CREAR ENTIDAD
+   CREATE ENTITY
 ========================= */
 
 export function createBubble(){
 
-    entities.push({
+    const type = randomType();
 
-        type: randomType(),
+    let entity = {
+
+        type,
 
         x: Math.random() * GAME.width,
 
         y: -50,
 
-        radius: 20 + Math.random() * 15,
+        radius: 25,
 
         speed: 2 + Math.random() * 3
 
-    });
+    };
+
+    /* =========================
+       CRAB SPECIAL
+    ========================= */
+
+    if(type === "crab"){
+
+        entity.y = GAME.height - 100;
+
+        entity.x = -100;
+
+        entity.vx = 4;
+
+        entity.radius = 35;
+    }
+
+    entities.push(entity);
 
 }
 
 /* =========================
-   CREAR BALA
+   CREATE BULLET
 ========================= */
 
 export function createBullet(x, y){
@@ -81,19 +117,51 @@ export function updateEntities(){
 
     for(let entity of entities){
 
-        entity.y += entity.speed;
+        /* =========================
+           CRAB MOVEMENT
+        ========================= */
+
+        if(entity.type === "crab"){
+
+            entity.x += entity.vx;
+
+        }else{
+
+            entity.y += entity.speed;
+
+        }
 
     }
 
+    /* =========================
+       CLEAN ENTITIES
+    ========================= */
+
     for(let i = entities.length - 1; i >= 0; i--){
 
-        if(entities[i].y > GAME.height + 100){
+        const entity = entities[i];
 
-            if(entities[i].type === "bubble"){
+        // vertical
+        if(
+            entity.type !== "crab" &&
+            entity.y > GAME.height + 100
+        ){
+
+            if(entity.type === "bubble"){
 
                 GAME.score++;
 
             }
+
+            entities.splice(i,1);
+
+        }
+
+        // crab lateral
+        if(
+            entity.type === "crab" &&
+            entity.x > GAME.width + 100
+        ){
 
             entities.splice(i,1);
 
@@ -153,6 +221,24 @@ export function drawEntities(ctx){
 
         }
 
+        if(entity.type === "diamond"){
+
+            drawDiamond(ctx, entity);
+
+        }
+
+        if(entity.type === "shield"){
+
+            drawShield(ctx, entity);
+
+        }
+
+        if(entity.type === "crab"){
+
+            drawCrab(ctx, entity);
+
+        }
+
     }
 
 }
@@ -169,7 +255,7 @@ export function drawBullets(ctx){
 
         ctx.fillStyle = "#00ffff";
 
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 20;
         ctx.shadowColor = "#00ffff";
 
         ctx.beginPath();
@@ -191,7 +277,7 @@ export function drawBullets(ctx){
 }
 
 /* =========================
-   BURBUJA
+   BUBBLE
 ========================= */
 
 function drawBubble(ctx, bubble){
@@ -218,19 +304,6 @@ function drawBubble(ctx, bubble){
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.beginPath();
-
-    ctx.arc(
-        bubble.x - bubble.radius * 0.3,
-        bubble.y - bubble.radius * 0.3,
-        bubble.radius * 0.2,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fillStyle = "rgba(255,255,255,0.7)";
-    ctx.fill();
-
     ctx.restore();
 
 }
@@ -253,7 +326,7 @@ function drawStar(ctx, star){
     ctx.arc(
         star.x,
         star.y,
-        star.radius * 0.7,
+        star.radius * 0.6,
         0,
         Math.PI * 2
     );
@@ -274,9 +347,9 @@ function drawAlga(ctx, alga){
 
     ctx.strokeStyle = "#00ff88";
 
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 6;
 
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = 20;
     ctx.shadowColor = "#00ff88";
 
     ctx.beginPath();
@@ -291,6 +364,97 @@ function drawAlga(ctx, alga){
     );
 
     ctx.stroke();
+
+    ctx.restore();
+
+}
+
+/* =========================
+   DIAMOND
+========================= */
+
+function drawDiamond(ctx, diamond){
+
+    ctx.save();
+
+    ctx.fillStyle = "#00ffff";
+
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#00ffff";
+
+    ctx.beginPath();
+
+    ctx.moveTo(diamond.x, diamond.y - 15);
+
+    ctx.lineTo(diamond.x + 15, diamond.y);
+
+    ctx.lineTo(diamond.x, diamond.y + 15);
+
+    ctx.lineTo(diamond.x - 15, diamond.y);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
+
+}
+
+/* =========================
+   SHIELD
+========================= */
+
+function drawShield(ctx, shield){
+
+    ctx.save();
+
+    ctx.strokeStyle = "#0088ff";
+
+    ctx.lineWidth = 5;
+
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#0088ff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        shield.x,
+        shield.y,
+        shield.radius,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+
+}
+
+/* =========================
+   CRAB
+========================= */
+
+function drawCrab(ctx, crab){
+
+    ctx.save();
+
+    ctx.fillStyle = "#ff3300";
+
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#ff3300";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        crab.x,
+        crab.y,
+        crab.radius,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
 
     ctx.restore();
 
