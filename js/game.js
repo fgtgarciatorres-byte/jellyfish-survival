@@ -220,13 +220,14 @@ function update(){
         if(shootCooldown <= 0){
 
             createBullet(
-                triggerShake(1.5);
 
-                player.x,
+    player.x,
 
-                player.y - 40
+    player.y - 40
 
-            );
+);
+
+triggerShake(1.5);
 
             shootCooldown = 10;
 
