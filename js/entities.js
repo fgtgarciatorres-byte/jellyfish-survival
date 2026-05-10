@@ -166,24 +166,7 @@ export function createBubble(){
 
 }
 
-/* =========================
-   CREATE BULLET
-========================= */
 
-export function createBullet(x, y){
-
-    bullets.push({
-
-        x,
-        y,
-
-        radius: 8,
-
-        speed: 10
-
-    });
-
-}
 
 /* =========================
    UPDATE ENTITIES
@@ -394,29 +377,7 @@ triggerFlash(
 
 }
 
-/* =========================
-   UPDATE BULLETS
-========================= */
 
-export function updateBullets(){
-
-    for(let bullet of bullets){
-
-        bullet.y -= bullet.speed;
-
-    }
-
-    for(let i = bullets.length - 1; i >= 0; i--){
-
-        if(bullets[i].y < -100){
-
-            bullets.splice(i,1);
-
-        }
-
-    }
-
-}
 /* =========================
    CREATE BULLET
 ========================= */
@@ -478,43 +439,7 @@ export function updateBullets(){
     }
 
 }
-/* =========================
-   DRAW BULLETS
-========================= */
 
-export function drawBullets(ctx){
-
-    for(const bullet of bullets){
-
-        ctx.save();
-
-        ctx.beginPath();
-
-        ctx.arc(
-
-            bullet.x,
-            bullet.y,
-
-            bullet.radius,
-
-            0,
-            Math.PI * 2
-
-        );
-
-        ctx.fillStyle = "#90e0ef";
-
-        ctx.shadowColor = "#90e0ef";
-
-        ctx.shadowBlur = 20;
-
-        ctx.fill();
-
-        ctx.restore();
-
-    }
-
-}
 /* =========================
    DRAW ENTITIES
 ========================= */
