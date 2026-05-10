@@ -1,4 +1,10 @@
+
 import { GAME } from "./state.js";
+import {
+
+    createExplosion
+
+} from "./particles.js";
 
 /* =========================
    ARRAYS
@@ -247,7 +253,15 @@ export function updateEntities(){
                 // destruir mina
                 if(entity.explosionRadius > 140){
 
-                    entity.dead = true;
+                   createExplosion(
+
+    entity.x,
+    entity.y,
+
+    "#ff2222"
+
+); 
+                   entity.dead = true;
 
                 }
 
