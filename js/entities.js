@@ -67,7 +67,10 @@ export function createBubble(){
 
         radius: 25,
 
-        speed: 2 + Math.random() * 3
+        speed: 2 + Math.random() * 3,
+
+        vx: 0,
+        vy: 0
 
     };
 
@@ -118,16 +121,41 @@ export function updateEntities(){
     for(let entity of entities){
 
         /* =========================
-           CRAB MOVEMENT
+           VECTORIAL MOVEMENT
+        ========================= */
+
+        if(entity.vx !== undefined){
+
+            entity.x += entity.vx;
+
+        }
+
+        if(entity.vy !== undefined){
+
+            entity.y += entity.vy;
+
+        }
+
+        /* =========================
+           NORMAL FALL
+        ========================= */
+
+        if(
+            !entity.bossProjectile &&
+            entity.type !== "crab"
+        ){
+
+            entity.y += entity.speed;
+
+        }
+
+        /* =========================
+           CRAB
         ========================= */
 
         if(entity.type === "crab"){
 
             entity.x += entity.vx;
-
-        }else{
-
-            entity.y += entity.speed;
 
         }
 
@@ -141,10 +169,13 @@ export function updateEntities(){
 
         const entity = entities[i];
 
-        // vertical
+        /* =========================
+           NORMAL ENTITIES
+        ========================= */
+
         if(
             entity.type !== "crab" &&
-            entity.y > GAME.height + 100
+            entity.y > GAME.height + 120
         ){
 
             if(entity.type === "bubble"){
@@ -157,10 +188,31 @@ export function updateEntities(){
 
         }
 
-        // crab lateral
+        /* =========================
+           CRABS
+        ========================= */
+
         if(
             entity.type === "crab" &&
-            entity.x > GAME.width + 100
+            entity.x > GAME.width + 120
+        ){
+
+            entities.splice(i,1);
+
+        }
+
+        /* =========================
+           PROJECTILES
+        ========================= */
+
+        if(
+            entity.bossProjectile &&
+            (
+                entity.x < -200 ||
+                entity.x > GAME.width + 200 ||
+                entity.y < -200 ||
+                entity.y > GAME.height + 200
+            )
         ){
 
             entities.splice(i,1);
@@ -256,16 +308,20 @@ export function drawBullets(ctx){
         ctx.fillStyle = "#00ffff";
 
         ctx.shadowBlur = 20;
+
         ctx.shadowColor = "#00ffff";
 
         ctx.beginPath();
 
         ctx.arc(
+
             bullet.x,
             bullet.y,
             bullet.radius,
+
             0,
             Math.PI * 2
+
         );
 
         ctx.fill();
@@ -284,24 +340,49 @@ function drawBubble(ctx, bubble){
 
     ctx.save();
 
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = "#90e0ef";
+    /* =========================
+       BOSS PROJECTILE
+    ========================= */
+
+    if(bubble.bossProjectile){
+
+        ctx.fillStyle = "#ff4444";
+
+        ctx.shadowBlur = 25;
+
+        ctx.shadowColor = "#ff0000";
+
+    }else{
+
+        ctx.fillStyle =
+            "rgba(173,216,230,0.25)";
+
+        ctx.shadowBlur = 15;
+
+        ctx.shadowColor = "#90e0ef";
+
+    }
 
     ctx.beginPath();
 
     ctx.arc(
+
         bubble.x,
         bubble.y,
+
         bubble.radius,
+
         0,
         Math.PI * 2
+
     );
 
-    ctx.fillStyle = "rgba(173,216,230,0.25)";
     ctx.fill();
 
     ctx.strokeStyle = "#caf0f8";
+
     ctx.lineWidth = 2;
+
     ctx.stroke();
 
     ctx.restore();
@@ -319,16 +400,21 @@ function drawStar(ctx, star){
     ctx.fillStyle = "gold";
 
     ctx.shadowBlur = 20;
+
     ctx.shadowColor = "yellow";
 
     ctx.beginPath();
 
     ctx.arc(
+
         star.x,
         star.y,
+
         star.radius * 0.6,
+
         0,
         Math.PI * 2
+
     );
 
     ctx.fill();
@@ -350,17 +436,26 @@ function drawAlga(ctx, alga){
     ctx.lineWidth = 6;
 
     ctx.shadowBlur = 20;
+
     ctx.shadowColor = "#00ff88";
 
     ctx.beginPath();
 
-    ctx.moveTo(alga.x, alga.y);
+    ctx.moveTo(
+        alga.x,
+        alga.y
+    );
 
     ctx.quadraticCurveTo(
+
         alga.x + 20,
+
         alga.y + 30,
+
         alga.x,
+
         alga.y + 60
+
     );
 
     ctx.stroke();
@@ -380,17 +475,30 @@ function drawDiamond(ctx, diamond){
     ctx.fillStyle = "#00ffff";
 
     ctx.shadowBlur = 20;
+
     ctx.shadowColor = "#00ffff";
 
     ctx.beginPath();
 
-    ctx.moveTo(diamond.x, diamond.y - 15);
+    ctx.moveTo(
+        diamond.x,
+        diamond.y - 15
+    );
 
-    ctx.lineTo(diamond.x + 15, diamond.y);
+    ctx.lineTo(
+        diamond.x + 15,
+        diamond.y
+    );
 
-    ctx.lineTo(diamond.x, diamond.y + 15);
+    ctx.lineTo(
+        diamond.x,
+        diamond.y + 15
+    );
 
-    ctx.lineTo(diamond.x - 15, diamond.y);
+    ctx.lineTo(
+        diamond.x - 15,
+        diamond.y
+    );
 
     ctx.closePath();
 
@@ -413,16 +521,21 @@ function drawShield(ctx, shield){
     ctx.lineWidth = 5;
 
     ctx.shadowBlur = 20;
+
     ctx.shadowColor = "#0088ff";
 
     ctx.beginPath();
 
     ctx.arc(
+
         shield.x,
         shield.y,
+
         shield.radius,
+
         0,
         Math.PI * 2
+
     );
 
     ctx.stroke();
@@ -442,16 +555,21 @@ function drawCrab(ctx, crab){
     ctx.fillStyle = "#ff3300";
 
     ctx.shadowBlur = 20;
+
     ctx.shadowColor = "#ff3300";
 
     ctx.beginPath();
 
     ctx.arc(
+
         crab.x,
         crab.y,
+
         crab.radius,
+
         0,
         Math.PI * 2
+
     );
 
     ctx.fill();
