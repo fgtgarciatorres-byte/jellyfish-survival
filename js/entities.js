@@ -19,7 +19,7 @@ import {
 export const entities = [];
 export const bullets = [];
 
-export const bullets = [];
+
 
 /* =========================
    RANDOM TYPE
