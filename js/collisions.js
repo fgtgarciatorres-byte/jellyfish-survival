@@ -7,6 +7,13 @@ import {
     bullets
 } from "./entities.js";
 
+import {
+
+    createParticles,
+    createExplosion
+
+} from "./particles.js";
+
 /* =========================
    COLISIONES
 ========================= */
@@ -58,6 +65,14 @@ export function checkCollisions(){
                 if(entity.type === "shark"){
 
     GAME.lives -= 2;
+                    createExplosion(
+
+    entity.x,
+    entity.y,
+
+    "#ff4444"
+
+);
 
 }
 
@@ -173,6 +188,21 @@ export function checkCollisions(){
 
                 // eliminar pompa
                 entities.splice(e,1);
+                
+                /* =========================
+   BUBBLE POP FX
+========================= */
+
+createParticles(
+
+    entity.x,
+    entity.y,
+
+    "#90e0ef",
+
+    18
+
+);
 
                 // puntuación
                 GAME.score += 5;
