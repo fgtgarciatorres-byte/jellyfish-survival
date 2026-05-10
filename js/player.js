@@ -158,7 +158,7 @@ export function drawPlayer(ctx){
 
             player.x,
             player.y,
-            radius + 20
+            player.radius + 20
 
         );
 
