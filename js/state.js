@@ -1,77 +1,83 @@
 export const GAME = {
 
     /* =========================
-       PANTALLA
+       CORE
     ========================= */
 
     width: window.innerWidth,
     height: window.innerHeight,
 
-    /* =========================
-       ESTADO GENERAL
-    ========================= */
-
     running: true,
 
-    /* =========================
-       PROGRESIÓN
-    ========================= */
-
-    score: 0,
     level: 1,
+    score: 0,
 
     /* =========================
-       VIDA
+       PLAYER
     ========================= */
 
     lives: 3,
     maxLives: 3,
 
     /* =========================
-       ENERGÍA
+       ENERGY
     ========================= */
 
     energy: 0,
     maxEnergy: 100,
 
+    /* =========================
+       COMBAT
+    ========================= */
+
     shooting: false,
 
+    bulletDamage: 1,
+
+    shootCooldown: 0,
+
+    fireRate: 10,
+
     /* =========================
-       INVENTARIO
+       OVERDRIVE
+    ========================= */
+
+    overdrive: false,
+
+    overdriveTimer: 0,
+
+    overdriveDuration: 300,
+
+    /* =========================
+       ITEMS
     ========================= */
 
     diamonds: 0,
     trophies: 0,
 
     /* =========================
-       ESCUDO
+       SHIELD
     ========================= */
 
     shield: false,
     shieldTimer: 0,
-    /* =========================
-   BOSS SYSTEM
-========================= */
-
-bossMode: false,
-
-bossLives: 0,
-
-bossMaxLives: 0,
-
-bossX: 0,
-
-bossY: 120,
-
-bossDirection: 1,
-
-bossShootTimer: 0,
 
     /* =========================
-       INPUT
+       FX
     ========================= */
 
-    mouseX: window.innerWidth / 2,
-    mouseY: window.innerHeight / 2
+    screenShake: 0,
+
+    flash: {
+        active: false,
+        color: "#ffffff",
+        alpha: 0
+    },
+
+    /* =========================
+       BOSS
+    ========================= */
+
+    bossMode: false
 
 };
