@@ -51,7 +51,13 @@ function randomType(){
 
 }
 
-return "shark";
+if(random < 0.99){
+
+    return "shark";
+
+}
+
+return "mine";
 
 }
 
@@ -122,6 +128,21 @@ if(type === "shark"){
         entity.vx > 0
         ? -200
         : GAME.width + 200;
+
+}
+/* =========================
+   MINE SPECIAL
+========================= */
+
+if(type === "mine"){
+
+    entity.radius = 35;
+
+    entity.speed = 1.5;
+
+    entity.exploding = false;
+
+    entity.explosionRadius = 0;
 
 }
 
@@ -272,6 +293,15 @@ if(entity.type === "shark"){
             entities.splice(i,1);
 
         }
+       /* =========================
+   DEAD ENTITIES
+========================= */
+
+if(entity.dead){
+
+    entities.splice(i,1);
+
+}
 
     }
 
@@ -346,6 +376,11 @@ export function drawEntities(ctx){
 if(entity.type === "shark"){
 
     drawShark(ctx, entity);
+
+}
+       if(entity.type === "mine"){
+
+    drawMine(ctx, entity);
 
 }
         }
@@ -751,5 +786,165 @@ function drawShark(ctx, shark){
     ctx.fill();
 
     ctx.restore();
+
+}
+/* =========================
+   MINE
+========================= */
+
+function drawMine(ctx, mine){
+
+    ctx.save();
+
+    /* =========================
+       EXPLOSION
+    ========================= */
+
+    if(mine.exploding){
+
+        ctx.strokeStyle =
+            "rgba(255,80,80,0.8)";
+
+        ctx.lineWidth = 8;
+
+        ctx.shadowBlur = 30;
+
+        ctx.shadowColor = "#ff0000";
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            mine.x,
+            mine.y,
+
+            mine.explosionRadius,
+
+            0,
+            Math.PI * 2
+
+        );
+
+        ctx.stroke();
+
+    }
+
+    /* =========================
+       BODY
+    ========================= */
+
+    ctx.fillStyle = "#444";
+
+    ctx.shadowBlur = 20;
+
+    ctx.shadowColor = "#ff0000";
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        mine.x,
+        mine.y,
+
+        mine.radius,
+
+        0,
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+    /* =========================
+       SPIKES
+    ========================= */
+
+    ctx.strokeStyle = "#999";
+
+    ctx.lineWidth = 4;
+
+    for(let i = 0; i < 8; i++){
+
+        const angle =
+            (Math.PI * 2 / 8) * i;
+
+        const x1 =
+            mine.x +
+            Math.cos(angle) * 25;
+
+        const y1 =
+            mine.y +
+            Math.sin(angle) * 25;
+
+        const x2 =
+            mine.x +
+            Math.cos(angle) * 45;
+
+        const y2 =
+            mine.y +
+            Math.sin(angle) * 45;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1,y1);
+
+        ctx.lineTo(x2,y2);
+
+        ctx.stroke();
+
+    }
+
+    ctx.restore();
+
+}
+/* =========================
+   MINE AI
+========================= */
+
+if(entity.type === "mine"){
+
+    const dx =
+        GAME.mouseX - entity.x;
+
+    const dy =
+        GAME.mouseY - entity.y;
+
+    const distance = Math.sqrt(
+        dx * dx + dy * dy
+    );
+
+    // activar explosión
+    if(
+        distance < 140 &&
+        !entity.exploding
+    ){
+
+        entity.exploding = true;
+
+    }
+
+    // crecer explosión
+    if(entity.exploding){
+
+        entity.explosionRadius += 8;
+
+        // daño explosión
+        if(
+            entity.explosionRadius < 120 &&
+            distance < entity.explosionRadius
+        ){
+
+            GAME.lives -= 0.03;
+
+        }
+
+        // eliminar mina
+        if(entity.explosionRadius > 140){
+
+            entity.dead = true;
+
+        }
+
+    }
 
 }
