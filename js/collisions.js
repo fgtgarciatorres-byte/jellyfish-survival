@@ -8,20 +8,17 @@ import {
 } from "./entities.js";
 
 import {
-
     createParticles,
     createExplosion
-
 } from "./particles.js";
-import {
 
+import {
     triggerShake,
     triggerFlash
-
 } from "./effects.js";
 
 /* =========================
-   COLISIONES
+   COLLISIONS
 ========================= */
 
 export function checkCollisions(){
@@ -46,65 +43,101 @@ export function checkCollisions(){
             player.radius + entity.radius
         ){
 
-            // eliminar entidad
+            /* =========================
+               REMOVE ENTITY
+            ========================= */
+
             entities.splice(i,1);
 
             /* =========================
-               BUBBLE = DAÑO
+               BUBBLE DAMAGE
             ========================= */
 
-        /* =========================
-   BUBBLE DAMAGE
-========================= */
+            if(entity.type === "bubble"){
 
-if(entity.type === "bubble"){
+                if(!GAME.shield){
 
-    if(!GAME.shield){
+                    GAME.lives--;
 
-        GAME.lives--;
+                    triggerShake(10);
 
-        triggerShake(10);
+                    triggerFlash(
+                        "#ff0000",
+                        0.15
+                    );
 
-    }
+                }
 
-}
-
-/* =========================
-   SHARK DAMAGE
-========================= */
-
-if(entity.type === "shark"){
-
-    if(!GAME.shield){
-
-        GAME.lives -= 2;
-
-    }
-
-    createExplosion(
-
-        entity.x,
-        entity.y,
-
-        "#ff4444"
-
-    );
-
-    triggerShake(18);
-
-    triggerFlash(
-
-        "#ff0000",
-
-        0.25
-
-    );
-
-}
-                   
+            }
 
             /* =========================
-               STAR = PUNTOS
+               SHARK DAMAGE
+            ========================= */
+
+            if(entity.type === "shark"){
+
+                if(!GAME.shield){
+
+                    GAME.lives -= 2;
+
+                }
+
+                createExplosion(
+
+                    entity.x,
+                    entity.y,
+
+                    "#ff4444"
+
+                );
+
+                triggerShake(18);
+
+                triggerFlash(
+
+                    "#ff0000",
+
+                    0.25
+
+                );
+
+            }
+
+            /* =========================
+               MINE DAMAGE
+            ========================= */
+
+            if(entity.type === "mine"){
+
+                if(!GAME.shield){
+
+                    GAME.lives -= 2;
+
+                }
+
+                createExplosion(
+
+                    entity.x,
+                    entity.y,
+
+                    "#ff2200"
+
+                );
+
+                triggerShake(30);
+
+                triggerFlash(
+
+                    "#ff3300",
+
+                    0.4
+
+                );
+
+            }
+
+            /* =========================
+               STAR
             ========================= */
 
             if(entity.type === "star"){
@@ -114,16 +147,20 @@ if(entity.type === "shark"){
             }
 
             /* =========================
-               ALGA = ENERGÍA
+               ALGA
             ========================= */
 
             if(entity.type === "alga"){
 
                 GAME.energy += 20;
 
-                if(GAME.energy > GAME.maxEnergy){
+                if(
+                    GAME.energy >
+                    GAME.maxEnergy
+                ){
 
-                    GAME.energy = GAME.maxEnergy;
+                    GAME.energy =
+                        GAME.maxEnergy;
 
                 }
 
@@ -137,7 +174,6 @@ if(entity.type === "shark"){
 
                 GAME.diamonds++;
 
-                // cada 10 = trofeo
                 if(GAME.diamonds >= 10){
 
                     GAME.diamonds = 0;
@@ -146,7 +182,8 @@ if(entity.type === "shark"){
 
                     GAME.maxLives++;
 
-                    GAME.lives = GAME.maxLives;
+                    GAME.lives =
+                        GAME.maxLives;
 
                 }
 
@@ -161,6 +198,7 @@ if(entity.type === "shark"){
                 GAME.shield = true;
 
                 GAME.shieldTimer = 300;
+
             }
 
             /* =========================
@@ -171,9 +209,13 @@ if(entity.type === "shark"){
 
                 GAME.lives++;
 
-                if(GAME.lives > GAME.maxLives){
+                if(
+                    GAME.lives >
+                    GAME.maxLives
+                ){
 
-                    GAME.lives = GAME.maxLives;
+                    GAME.lives =
+                        GAME.maxLives;
 
                 }
 
@@ -195,14 +237,23 @@ if(entity.type === "shark"){
 
             const entity = entities[e];
 
-            // solo explotan bubbles
-            if(entity.type !== "bubble") continue;
+            if(entity.type !== "bubble"){
 
-            const dx = bullet.x - entity.x;
-            const dy = bullet.y - entity.y;
+                continue;
+
+            }
+
+            const dx =
+                bullet.x - entity.x;
+
+            const dy =
+                bullet.y - entity.y;
 
             const distance = Math.sqrt(
-                dx * dx + dy * dy
+
+                dx * dx +
+                dy * dy
+
             );
 
             if(
@@ -210,34 +261,43 @@ if(entity.type === "shark"){
                 bullet.radius + entity.radius
             ){
 
-                // eliminar bala
+                /* =========================
+                   REMOVE
+                ========================= */
+
                 bullets.splice(b,1);
 
-                // eliminar pompa
                 entities.splice(e,1);
-                
+
                 /* =========================
-   BUBBLE POP FX
-========================= */
+                   PARTICLES
+                ========================= */
 
-createParticles(
+                createParticles(
 
-    entity.x,
-    entity.y,
+                    entity.x,
+                    entity.y,
 
-    "#90e0ef",
+                    "#90e0ef",
 
-    18
+                    18
 
-);
+                );
 
-triggerShake(2);
+                /* =========================
+                   IMPACT
+                ========================= */
 
-                // puntuación
+                triggerShake(2);
+
+                /* =========================
+                   SCORE
+                ========================= */
+
                 GAME.score += 5;
 
                 /* =========================
-                   DROP DIAMANTE
+                   DIAMOND DROP
                 ========================= */
 
                 if(Math.random() < 0.4){
