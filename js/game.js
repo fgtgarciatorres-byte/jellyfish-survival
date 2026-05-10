@@ -221,13 +221,11 @@ function update(){
 
             createBullet(
 
-    player.x,
+                player.x,
 
-    player.y - 40
+                player.y - 40
 
-);
-
-triggerShake(1.5);
+            );
 
             shootCooldown = 10;
 
@@ -384,8 +382,7 @@ function draw(){
        FLASH
     ========================= */
 
-   drawFlash,
-triggerShake(ctx);
+    drawFlash(ctx);
 
 }
 
