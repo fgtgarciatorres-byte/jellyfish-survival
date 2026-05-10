@@ -6,6 +6,9 @@ export const GAME = {
 
     width: window.innerWidth,
     height: window.innerHeight,
+    
+    mouseX: window.innerWidth / 2,
+    mouseY: window.innerHeight / 2,
 
     running: true,
 
