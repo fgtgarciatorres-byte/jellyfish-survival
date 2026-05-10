@@ -67,19 +67,14 @@ canvas.height = GAME.height;
    INPUT
 ========================= */
 
-window.addEventListener(
+window.addEventListener("mousemove", (e) => {
 
-    "mousemove",
+    GAME.mouseX = e.clientX;
+    GAME.mouseY = e.clientY;
 
-    (e)=>{
+});
 
-        GAME.mouseX = e.clientX;
 
-        GAME.mouseY = e.clientY;
-
-    }
-
-);
 
 /* =========================
    RESIZE
