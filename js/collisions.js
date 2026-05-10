@@ -13,6 +13,12 @@ import {
     createExplosion
 
 } from "./particles.js";
+import {
+
+    triggerShake,
+    triggerFlash
+
+} from "./effects.js";
 
 /* =========================
    COLISIONES
@@ -65,6 +71,16 @@ export function checkCollisions(){
                 if(entity.type === "shark"){
 
     GAME.lives -= 2;
+                    /* =========================
+   SHARK IMPACT
+========================= */
+
+triggerShake(18);
+
+triggerFlash(
+    "#ff0000",
+    0.25
+);
                     createExplosion(
 
     entity.x,
@@ -194,6 +210,7 @@ export function checkCollisions(){
 ========================= */
 
 createParticles(
+    triggerShake(2);
 
     entity.x,
     entity.y,
