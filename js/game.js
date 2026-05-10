@@ -220,6 +220,7 @@ function update(){
         if(shootCooldown <= 0){
 
             createBullet(
+                triggerShake(1.5);
 
                 player.x,
 
@@ -382,7 +383,8 @@ function draw(){
        FLASH
     ========================= */
 
-    drawFlash(ctx);
+   drawFlash,
+triggerShake(ctx);
 
 }
 
