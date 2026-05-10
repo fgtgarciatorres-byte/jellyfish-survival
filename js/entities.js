@@ -45,7 +45,13 @@ function randomType(){
     }
 
     // 5%
+   if(random < 0.98){
+
     return "crab";
+
+}
+
+return "shark";
 
 }
 
@@ -90,6 +96,32 @@ export function createBubble(){
     }
 
     entities.push(entity);
+
+}
+/* =========================
+   SHARK SPECIAL
+========================= */
+
+if(type === "shark"){
+
+    entity.y =
+        100 +
+        Math.random()
+        * (GAME.height - 200);
+
+    entity.radius = 50;
+
+    entity.speed = 0;
+
+    entity.vx =
+        Math.random() < 0.5
+        ? 4
+        : -4;
+
+    entity.x =
+        entity.vx > 0
+        ? -200
+        : GAME.width + 200;
 
 }
 
