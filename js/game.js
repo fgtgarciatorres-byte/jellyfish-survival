@@ -39,12 +39,22 @@ import {
 
 } from "./particles.js";
 
+import {
+
+    updateEffects,
+    applyShake,
+    drawFlash
+
+} from "./effects.js";
+
 /* =========================
    CANVAS
 ========================= */
 
 const canvas =
-    document.getElementById("gameCanvas");
+    document.getElementById(
+        "gameCanvas"
+    );
 
 const ctx =
     canvas.getContext("2d");
@@ -58,6 +68,7 @@ canvas.height = GAME.height;
 ========================= */
 
 window.addEventListener(
+
     "mousemove",
 
     (e)=>{
@@ -75,6 +86,7 @@ window.addEventListener(
 ========================= */
 
 window.addEventListener(
+
     "resize",
 
     ()=>{
@@ -126,18 +138,27 @@ function update(){
     updateEntities();
 
     updateBullets();
-    
-    /* =========================
-   PARTICLES
-========================= */
 
-updateParticles();
+    /* =========================
+       PARTICLES
+    ========================= */
+
+    updateParticles();
+
+    /* =========================
+       EFFECTS
+    ========================= */
+
+    updateEffects();
+
     /* =========================
        LEVEL SYSTEM
     ========================= */
 
     GAME.level =
+
         1 +
+
         Math.floor(
             GAME.score / 100
         );
@@ -241,7 +262,7 @@ updateParticles();
 ========================= */
 
 function draw(){
-console.log("DRAW");
+
     /* =========================
        CLEAR
     ========================= */
@@ -255,6 +276,14 @@ console.log("DRAW");
         GAME.height
 
     );
+
+    /* =========================
+       CAMERA
+    ========================= */
+
+    ctx.save();
+
+    applyShake(ctx);
 
     /* =========================
        BACKGROUND
@@ -320,12 +349,12 @@ console.log("DRAW");
     drawEntities(ctx);
 
     drawBullets(ctx);
-    
-    /* =========================
-   PARTICLES
-========================= */
 
-drawParticles(ctx);
+    /* =========================
+       PARTICLES
+    ========================= */
+
+    drawParticles(ctx);
 
     /* =========================
        BOSS
@@ -342,6 +371,18 @@ drawParticles(ctx);
     ========================= */
 
     drawPlayer(ctx);
+
+    /* =========================
+       RESTORE CAMERA
+    ========================= */
+
+    ctx.restore();
+
+    /* =========================
+       FLASH
+    ========================= */
+
+    drawFlash(ctx);
 
 }
 
