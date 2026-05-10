@@ -196,52 +196,120 @@ function update(){
 
     }
 
+  /* =========================
+   OVERDRIVE ACTIVATION
+========================= */
+
+if(
+
+    GAME.energy >=
+    GAME.maxEnergy
+
+    &&
+
+    !GAME.overdrive
+
+){
+
+    GAME.overdrive = true;
+
+    GAME.overdriveTimer =
+        GAME.overdriveDuration;
+
+}
+
+/* =========================
+   SHOOT COOLDOWN
+========================= */
+
+GAME.shootCooldown--;
+
+if(GAME.shootCooldown <= 0){
+
     /* =========================
-       SHOOT MODE
+       NORMAL SHOT
     ========================= */
+
+    if(!GAME.overdrive){
+
+        createBullet(
+
+            player.x,
+            player.y - 40
+
+        );
+
+        GAME.shootCooldown =
+            GAME.fireRate;
+
+    }
+
+    /* =========================
+       OVERDRIVE SHOT
+    ========================= */
+
+    else{
+
+        createBullet(
+
+            player.x,
+            player.y - 40,
+
+            -Math.PI / 2
+
+        );
+
+        createBullet(
+
+            player.x,
+            player.y - 40,
+
+            -Math.PI / 2 - 0.25
+
+        );
+
+        createBullet(
+
+            player.x,
+            player.y - 40,
+
+            -Math.PI / 2 + 0.25
+
+        );
+
+        GAME.shootCooldown = 4;
+
+    }
+
+    triggerShake(1);
+
+}
+
+/* =========================
+   OVERDRIVE TIMER
+========================= */
+
+if(GAME.overdrive){
+
+    GAME.overdriveTimer--;
+
+    GAME.energy -= 0.4;
 
     if(
-        GAME.energy >=
-        GAME.maxEnergy
+
+        GAME.overdriveTimer <= 0 ||
+
+        GAME.energy <= 0
+
     ){
 
-        GAME.shooting = true;
+        GAME.overdrive = false;
+
+        GAME.energy = 0;
 
     }
 
-    /* =========================
-       SHOOTING
-    ========================= */
-
-    if(GAME.shooting){
-
-        shootCooldown--;
-
-        if(shootCooldown <= 0){
-
-            createBullet(
-
-                player.x,
-
-                player.y - 40
-
-            );
-
-            shootCooldown = 10;
-
-        }
-
-        GAME.energy -= 1;
-
-        if(GAME.energy <= 0){
-
-            GAME.energy = 0;
-
-            GAME.shooting = false;
-
-        }
-
-    }
+}
 
     /* =========================
        COLLISIONS
