@@ -211,9 +211,7 @@ export function checkCollisions(){
    BUBBLE POP FX
 ========================= */
 
-createParticles(...);
-
-triggerShake(2);
+createParticles(
 
     entity.x,
     entity.y,
@@ -223,6 +221,8 @@ triggerShake(2);
     18
 
 );
+
+triggerShake(2);
 
                 // puntuación
                 GAME.score += 5;
