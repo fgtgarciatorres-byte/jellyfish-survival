@@ -2,13 +2,20 @@ import { GAME } from "./state.js";
 
 import { player } from "./player.js";
 
-import { entities } from "./entities.js";
+import {
+    entities,
+    bullets
+} from "./entities.js";
 
 /* =========================
    COLISIONES
 ========================= */
 
 export function checkCollisions(){
+
+    /* =========================
+       PLAYER VS ENTITIES
+    ========================= */
 
     for(let i = entities.length - 1; i >= 0; i--){
 
@@ -21,37 +28,186 @@ export function checkCollisions(){
             dx * dx + dy * dy
         );
 
-       if(
-    distance <
-    player.radius + entity.radius + 20
-){
+        if(
+            distance <
+            player.radius + entity.radius
+        ){
 
-    // eliminar entidad
-    entities.splice(i,1);
+            // eliminar entidad
+            entities.splice(i,1);
+
+            /* =========================
+               BUBBLE = DAÑO
+            ========================= */
+
+            if(entity.type === "bubble"){
+
+                // escudo activo
+                if(!GAME.shield){
+
+                    GAME.lives--;
+
+                }
+
+            }
+
+            /* =========================
+               STAR = PUNTOS
+            ========================= */
+
+            if(entity.type === "star"){
+
+                GAME.score += 10;
+
+            }
+
+            /* =========================
+               ALGA = ENERGÍA
+            ========================= */
+
+            if(entity.type === "alga"){
+
+                GAME.energy += 20;
+
+                if(GAME.energy > GAME.maxEnergy){
+
+                    GAME.energy = GAME.maxEnergy;
+
+                }
+
+            }
+
+            /* =========================
+               DIAMOND
+            ========================= */
+
+            if(entity.type === "diamond"){
+
+                GAME.diamonds++;
+
+                // cada 10 = trofeo
+                if(GAME.diamonds >= 10){
+
+                    GAME.diamonds = 0;
+
+                    GAME.trophies++;
+
+                    GAME.maxLives++;
+
+                    GAME.lives = GAME.maxLives;
+
+                }
+
+            }
+
+            /* =========================
+               SHIELD
+            ========================= */
+
+            if(entity.type === "shield"){
+
+                GAME.shield = true;
+
+                GAME.shieldTimer = 300;
+            }
+
+            /* =========================
+               CRAB
+            ========================= */
+
+            if(entity.type === "crab"){
+
+                GAME.lives++;
+
+                if(GAME.lives > GAME.maxLives){
+
+                    GAME.lives = GAME.maxLives;
+
+                }
+
+            }
+
+        }
+
+    }
 
     /* =========================
-       EFECTOS SEGÚN TIPO
+       BULLETS VS BUBBLES
     ========================= */
 
-    if(entity.type === "bubble"){
+    for(let b = bullets.length - 1; b >= 0; b--){
 
-        GAME.lives--;
+        const bullet = bullets[b];
+
+        for(let e = entities.length - 1; e >= 0; e--){
+
+            const entity = entities[e];
+
+            // solo explotan bubbles
+            if(entity.type !== "bubble") continue;
+
+            const dx = bullet.x - entity.x;
+            const dy = bullet.y - entity.y;
+
+            const distance = Math.sqrt(
+                dx * dx + dy * dy
+            );
+
+            if(
+                distance <
+                bullet.radius + entity.radius
+            ){
+
+                // eliminar bala
+                bullets.splice(b,1);
+
+                // eliminar pompa
+                entities.splice(e,1);
+
+                // puntuación
+                GAME.score += 5;
+
+                /* =========================
+                   DROP DIAMANTE
+                ========================= */
+
+                if(Math.random() < 0.4){
+
+                    entities.push({
+
+                        type: "diamond",
+
+                        x: entity.x,
+
+                        y: entity.y,
+
+                        radius: 12,
+
+                        speed: 2
+
+                    });
+
+                }
+
+                break;
+
+            }
+
+        }
 
     }
 
-    if(entity.type === "star"){
+    /* =========================
+       SHIELD TIMER
+    ========================= */
 
-        GAME.score += 10;
+    if(GAME.shield){
 
-    }
+        GAME.shieldTimer--;
 
-    if(entity.type === "alga"){
+        if(GAME.shieldTimer <= 0){
 
-        GAME.energy += 20;
-
-        if(GAME.energy > GAME.maxEnergy){
-
-            GAME.energy = GAME.maxEnergy;
+            GAME.shield = false;
 
         }
 
