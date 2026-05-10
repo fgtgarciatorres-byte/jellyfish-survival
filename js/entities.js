@@ -151,6 +151,28 @@ export function createBullet(x, y){
 export function updateEntities(){
 
     for(let entity of entities){
+       /* =========================
+   SHARK AI
+========================= */
+
+if(entity.type === "shark"){
+
+    const dx =
+        GAME.mouseX - entity.x;
+
+    const dy =
+        GAME.mouseY - entity.y;
+
+    const angle =
+        Math.atan2(dy, dx);
+
+    entity.vx =
+        Math.cos(angle) * 4;
+
+    entity.vy =
+        Math.sin(angle) * 4;
+
+}
 
         /* =========================
            VECTORIAL MOVEMENT
@@ -320,7 +342,12 @@ export function drawEntities(ctx){
         if(entity.type === "crab"){
 
             drawCrab(ctx, entity);
+            }
+if(entity.type === "shark"){
 
+    drawShark(ctx, entity);
+
+}
         }
 
     }
@@ -602,6 +629,123 @@ function drawCrab(ctx, crab){
         0,
         Math.PI * 2
 
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+
+}
+/* =========================
+   SHARK
+========================= */
+
+function drawShark(ctx, shark){
+
+    ctx.save();
+
+    ctx.translate(
+        shark.x,
+        shark.y
+    );
+
+    const angle =
+        Math.atan2(
+            shark.vy,
+            shark.vx
+        );
+
+    ctx.rotate(angle);
+
+    /* =========================
+       BODY
+    ========================= */
+
+    ctx.fillStyle = "#6c757d";
+
+    ctx.shadowBlur = 20;
+
+    ctx.shadowColor = "#adb5bd";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+
+        0,
+        0,
+
+        70,
+        35,
+
+        0,
+
+        0,
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+    /* =========================
+       TAIL
+    ========================= */
+
+    ctx.beginPath();
+
+    ctx.moveTo(-60,0);
+
+    ctx.lineTo(-100,-40);
+
+    ctx.lineTo(-100,40);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    /* =========================
+       FIN
+    ========================= */
+
+    ctx.beginPath();
+
+    ctx.moveTo(-10,-20);
+
+    ctx.lineTo(20,-70);
+
+    ctx.lineTo(40,-20);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    /* =========================
+       EYE
+    ========================= */
+
+    ctx.fillStyle = "white";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        40,
+        -8,
+        6,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle = "black";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        42,
+        -8,
+        3,
+        0,
+        Math.PI * 2
     );
 
     ctx.fill();
