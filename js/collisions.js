@@ -68,29 +68,31 @@ export function checkCollisions(){
                 }
 
             }
-                if(entity.type === "shark"){
+     if(entity.type === "shark"){
 
     GAME.lives -= 2;
-                    /* =========================
-   SHARK IMPACT
-========================= */
 
-triggerShake(18);
+    createExplosion(
 
-triggerFlash(
-    "#ff0000",
-    0.25
-);
-                    createExplosion(
+        entity.x,
+        entity.y,
 
-    entity.x,
-    entity.y,
+        "#ff4444"
 
-    "#ff4444"
+    );
 
-);
+    triggerShake(18);
+
+    triggerFlash(
+
+        "#ff0000",
+
+        0.25
+
+    );
 
 }
+                   
 
             /* =========================
                STAR = PUNTOS
@@ -209,8 +211,9 @@ triggerFlash(
    BUBBLE POP FX
 ========================= */
 
-createParticles(
-    triggerShake(2);
+createParticles(...);
+
+triggerShake(2);
 
     entity.x,
     entity.y,
