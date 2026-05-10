@@ -53,24 +53,33 @@ export function checkCollisions(){
                BUBBLE = DAÑO
             ========================= */
 
-            if(
-    entity.type === "bubble"
-    ||
-    entity.type === "shark"
-)
-            {
+        /* =========================
+   BUBBLE DAMAGE
+========================= */
 
-                // escudo activo
-                if(!GAME.shield){
+if(entity.type === "bubble"){
 
-                    GAME.lives--;
+    if(!GAME.shield){
 
-                }
+        GAME.lives--;
 
-            }
-     if(entity.type === "shark"){
+        triggerShake(10);
 
-    GAME.lives -= 2;
+    }
+
+}
+
+/* =========================
+   SHARK DAMAGE
+========================= */
+
+if(entity.type === "shark"){
+
+    if(!GAME.shield){
+
+        GAME.lives -= 2;
+
+    }
 
     createExplosion(
 
