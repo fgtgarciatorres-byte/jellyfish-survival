@@ -26,47 +26,79 @@ import {
     updateUI
 } from "./ui.js";
 
+import {
+    startBoss,
+    updateBoss,
+    drawBoss
+} from "./bosses.js";
+
 /* =========================
    CANVAS
 ========================= */
 
-const canvas = document.getElementById("gameCanvas");
+const canvas =
+    document.getElementById("gameCanvas");
 
-const ctx = canvas.getContext("2d");
+const ctx =
+    canvas.getContext("2d");
 
 canvas.width = GAME.width;
+
 canvas.height = GAME.height;
 
 /* =========================
    INPUT
 ========================= */
 
-window.addEventListener("mousemove", (e)=>{
+window.addEventListener(
+    "mousemove",
 
-    GAME.mouseX = e.clientX;
-    GAME.mouseY = e.clientY;
+    (e)=>{
 
-});
+        GAME.mouseX = e.clientX;
+
+        GAME.mouseY = e.clientY;
+
+    }
+
+);
 
 /* =========================
    RESIZE
 ========================= */
 
-window.addEventListener("resize", ()=>{
+window.addEventListener(
+    "resize",
 
-    GAME.width = window.innerWidth;
-    GAME.height = window.innerHeight;
+    ()=>{
 
-    canvas.width = GAME.width;
-    canvas.height = GAME.height;
+        GAME.width =
+            window.innerWidth;
 
-});
+        GAME.height =
+            window.innerHeight;
+
+        canvas.width =
+            GAME.width;
+
+        canvas.height =
+            GAME.height;
+
+    }
+
+);
 
 /* =========================
    SHOOTING
 ========================= */
 
 let shootCooldown = 0;
+
+/* =========================
+   BOSS CONTROL
+========================= */
+
+let lastBossLevel = 0;
 
 /* =========================
    UPDATE
@@ -89,10 +121,56 @@ function update(){
     updateBullets();
 
     /* =========================
-       SHOOTING MODE
+       LEVEL SYSTEM
     ========================= */
 
-    if(GAME.energy >= GAME.maxEnergy){
+    GAME.level =
+        1 +
+        Math.floor(
+            GAME.score / 100
+        );
+
+    /* =========================
+       BOSS SPAWN
+    ========================= */
+
+    if(
+
+        GAME.level >= 5 &&
+
+        GAME.level % 5 === 0 &&
+
+        !GAME.bossMode &&
+
+        lastBossLevel !== GAME.level
+
+    ){
+
+        startBoss();
+
+        lastBossLevel =
+            GAME.level;
+
+    }
+
+    /* =========================
+       UPDATE BOSS
+    ========================= */
+
+    if(GAME.bossMode){
+
+        updateBoss();
+
+    }
+
+    /* =========================
+       SHOOT MODE
+    ========================= */
+
+    if(
+        GAME.energy >=
+        GAME.maxEnergy
+    ){
 
         GAME.shooting = true;
 
@@ -109,8 +187,11 @@ function update(){
         if(shootCooldown <= 0){
 
             createBullet(
+
                 player.x,
+
                 player.y - 40
+
             );
 
             shootCooldown = 10;
@@ -128,13 +209,6 @@ function update(){
         }
 
     }
-
-    /* =========================
-       LEVEL SYSTEM
-    ========================= */
-
-    GAME.level =
-        1 + Math.floor(GAME.score / 100);
 
     /* =========================
        COLLISIONS
@@ -157,39 +231,74 @@ function update(){
 function draw(){
 
     /* =========================
-       BACKGROUND
+       CLEAR
     ========================= */
 
     ctx.clearRect(
+
         0,
         0,
+
         GAME.width,
         GAME.height
+
     );
 
     /* =========================
-       OCEAN BACKGROUND
+       BACKGROUND
     ========================= */
 
     const gradient =
         ctx.createLinearGradient(
+
             0,
             0,
+
             0,
             GAME.height
+
         );
 
-    gradient.addColorStop(0, "#001219");
+    /* =========================
+       BOSS BACKGROUND
+    ========================= */
 
-    gradient.addColorStop(1, "#003049");
+    if(GAME.bossMode){
+
+        gradient.addColorStop(
+            0,
+            "#200020"
+        );
+
+        gradient.addColorStop(
+            1,
+            "#000000"
+        );
+
+    }else{
+
+        gradient.addColorStop(
+            0,
+            "#001219"
+        );
+
+        gradient.addColorStop(
+            1,
+            "#003049"
+        );
+
+    }
 
     ctx.fillStyle = gradient;
 
     ctx.fillRect(
+
         0,
         0,
+
         GAME.width,
         GAME.height
+
     );
 
     /* =========================
@@ -201,42 +310,20 @@ function draw(){
     drawBullets(ctx);
 
     /* =========================
+       BOSS
+    ========================= */
+
+    if(GAME.bossMode){
+
+        drawBoss(ctx);
+
+    }
+
+    /* =========================
        PLAYER
     ========================= */
 
     drawPlayer(ctx);
-
-    /* =========================
-       SHIELD VISUAL
-    ========================= */
-
-    if(GAME.shield){
-
-        ctx.save();
-
-        ctx.strokeStyle = "#00aaff";
-
-        ctx.lineWidth = 5;
-
-        ctx.shadowBlur = 20;
-
-        ctx.shadowColor = "#00aaff";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            player.x,
-            player.y,
-            player.radius + 15,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-
-        ctx.restore();
-
-    }
 
 }
 
@@ -256,7 +343,9 @@ function gameLoop(){
 
     draw();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
