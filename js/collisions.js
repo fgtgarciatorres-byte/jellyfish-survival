@@ -40,7 +40,12 @@ export function checkCollisions(){
                BUBBLE = DAÑO
             ========================= */
 
-            if(entity.type === "bubble"){
+            if(
+    entity.type === "bubble"
+    ||
+    entity.type === "shark"
+)
+            {
 
                 // escudo activo
                 if(!GAME.shield){
@@ -50,6 +55,11 @@ export function checkCollisions(){
                 }
 
             }
+                if(entity.type === "shark"){
+
+    GAME.lives -= 2;
+
+}
 
             /* =========================
                STAR = PUNTOS
