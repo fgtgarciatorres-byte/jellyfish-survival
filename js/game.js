@@ -1,6 +1,14 @@
 import { GAME } from "./state.js";
 
 import {
+
+    updatePlayer,
+    drawPlayer,
+    player
+
+} from "./player.js"
+
+import {
     updateFlash,
     drawFlash,
     triggerShake,
@@ -139,7 +147,8 @@ function update(){
        EFFECTS
     ========================= */
 
-    updateEffects();
+    updateFlash();
+updateShake();
 
     /* =========================
        LEVEL SYSTEM
@@ -341,7 +350,7 @@ function draw(){
 
     ctx.save();
 
-    applyShake(ctx);
+   // applyShake(ctx);
 
     /* =========================
        BACKGROUND
