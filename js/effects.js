@@ -19,7 +19,14 @@ export let flashColor = "#ffffff";
 ========================= */
 
 export function triggerShake(
-   /* =========================
+    amount = 10
+){
+
+    screenShake = amount;
+
+}
+
+/* =========================
    UPDATE SHAKE
 ========================= */
 
@@ -32,7 +39,6 @@ export function updateShake(){
     }
 
 }
-   
 
 /* =========================
    FLASH
