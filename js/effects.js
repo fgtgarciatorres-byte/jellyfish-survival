@@ -64,10 +64,6 @@ export function triggerFlash(
 
 export function updateEffects(){
 
-    /* =========================
-       SHAKE DECAY
-    ========================= */
-
     screenShake *= 0.9;
 
     if(screenShake < 0.1){
@@ -75,10 +71,6 @@ export function updateEffects(){
         screenShake = 0;
 
     }
-
-    /* =========================
-       FLASH DECAY
-    ========================= */
 
     flash *= 0.9;
 
