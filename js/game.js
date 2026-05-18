@@ -9,10 +9,14 @@ import {
 } from "./player.js"
 
 import {
-    updateFlash,
+
+    updateEffects,
     drawFlash,
+
     triggerShake,
-    updateShake
+    updateShake,
+    applyShake
+
 } from "./effects.js";
 
 import {
