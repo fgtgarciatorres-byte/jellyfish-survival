@@ -1,10 +1,11 @@
 import { GAME } from "./state.js";
 
 import {
-    updatePlayer,
-    drawPlayer,
-    player
-} from "./player.js";
+    updateFlash,
+    drawFlash,
+    triggerShake,
+    updateShake
+} from "./effects.js";
 
 import {
     updateEntities,
