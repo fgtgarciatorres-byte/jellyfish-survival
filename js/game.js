@@ -40,13 +40,7 @@ import {
 
 } from "./particles.js";
 
-import {
 
-    updateEffects,
-    applyShake,
-    drawFlash
-
-} from "./effects.js";
 
 /* =========================
    CANVAS
