@@ -151,8 +151,7 @@ function update(){
        EFFECTS
     ========================= */
 
-    updateFlash();
-updateShake();
+   updateEffects();
 
     /* =========================
        LEVEL SYSTEM
@@ -354,7 +353,7 @@ function draw(){
 
     ctx.save();
 
-   // applyShake(ctx);
+   applyShake(ctx);
 
     /* =========================
        BACKGROUND
