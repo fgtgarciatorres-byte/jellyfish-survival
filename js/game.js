@@ -14,7 +14,7 @@ import {
     drawFlash,
 
     triggerShake,
-    updateShake,
+   updateShake,
     applyShake
 
 } from "./effects.js";
