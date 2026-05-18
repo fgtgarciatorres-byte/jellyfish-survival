@@ -1,34 +1,16 @@
 import { GAME } from "./state.js";
 
-/* =========================
-   SCREEN SHAKE
-========================= */
-
 export let screenShake = 0;
-
-/* =========================
-   FLASH
-========================= */
 
 export let flash = 0;
 
 export let flashColor = "#ffffff";
 
-/* =========================
-   SHAKE
-========================= */
-
-export function triggerShake(
-    amount = 10
-){
+export function triggerShake(amount = 10){
 
     screenShake = amount;
 
 }
-
-/* =========================
-   UPDATE SHAKE
-========================= */
 
 export function updateShake(){
 
@@ -39,10 +21,6 @@ export function updateShake(){
     }
 
 }
-
-/* =========================
-   FLASH
-========================= */
 
 export function triggerFlash(
 
@@ -57,10 +35,6 @@ export function triggerFlash(
     flashColor = color;
 
 }
-
-/* =========================
-   UPDATE EFFECTS
-========================= */
 
 export function updateEffects(){
 
@@ -81,10 +55,6 @@ export function updateEffects(){
     }
 
 }
-
-/* =========================
-   APPLY SHAKE
-========================= */
 
 export function applyShake(ctx){
 
@@ -109,13 +79,7 @@ export function applyShake(ctx){
 
 }
 
-/* =========================
-   DRAW FLASH
-========================= */
-
-export function drawFlash(
-    ctx
-){
+export function drawFlash(ctx){
 
     if(flash <= 0){
 
